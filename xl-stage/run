@@ -1,0 +1,25 @@
+#!/bin/bash
+# Use this script if you don't want to manually edit graph_gen.m
+# This script uses gen_graph.m, a slightly modified version of graph_gen.m
+echo -n "Number of nodes: "
+read nodes
+if [ "$nodes" == "" ]; then
+	echo "Exit..."
+	exit 1
+fi
+echo -n "Number of graph(s): [1]"
+read N
+if [ "$N" == "" ]; then
+	N=1
+fi
+echo -n "Generating graph(s)..."
+octave --eval "gen_graph($nodes,$N)"
+cp -rf uom_graphs Archive
+cp -rf uom_graphs Traffic
+python graphGeneratorXML.py &> /dev/null
+cp -rf Traffic/* uom_graphs/
+rm -rf uom_graphs/*.eps uom_graphs/*.gv uom_graphs/*.h uom_graphs/*.data
+rm -rf Archive
+rm -rf Traffic
+echo "done! Look the result(s) in the uom_graphs folder!"
+
